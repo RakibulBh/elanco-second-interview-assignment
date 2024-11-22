@@ -16,6 +16,8 @@ export default function Home() {
   const [center, setCenter] = useState(INITIAL_CENTER);
   const [zoom, setZoom] = useState(INITIAL_ZOOM);
 
+  const [searchTerm, setSearchTerm] = useState<string>("");
+
   useEffect(() => {
     if (mapContainerRef.current) {
       mapboxgl.accessToken =
@@ -46,9 +48,12 @@ export default function Home() {
 
   return (
     <main className="px-20 py-10 bg-[#242230] h-screen flex flex-col gap-10">
-      <SearchBar />
+      <SearchBar setSearchTerm={setSearchTerm} />
       <section className="flex flex-1 gap-8 min-h-0">
-        <CountriesList handleCountryClick={handleCountryClick} />
+        <CountriesList
+          searchTerm={searchTerm}
+          handleCountryClick={handleCountryClick}
+        />
         <Map ref={mapContainerRef} />
       </section>
     </main>

@@ -1,10 +1,12 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import CountryStatistics from "./country-statistics";
 import Title from "./title";
-import axios from "axios";
-import { Country, Population } from "@/types";
 import Image from "next/image";
+import { toast } from "@/hooks/use-toast";
+import { Country, Population } from "@/types";
 
 const populationURL =
   "https://countriesnow.space/api/v0.1/countries/population";
@@ -19,7 +21,8 @@ const CountryComponent = ({
 }) => {
   const [population, setPopulation] = useState<Population[] | null>(null);
   const [populationLoading, setPopulationLoading] = useState<boolean>(true);
-  const [LngLat, setLngLat] = useState<[number, number]>([0, 0]);
+  const [positionLoading, setPositionLoading] = useState<boolean>(true);
+  const [LngLat, setLngLat] = useState<[number, number] | null>(null);
 
   useEffect(() => {
     axios
@@ -27,14 +30,14 @@ const CountryComponent = ({
         country: country.name.toLowerCase(),
       })
       .then((response) => {
+        setPopulation(response.data.data.populationCounts || []);
         setPopulationLoading(false);
-        setPopulation(response.data.data.populationCounts);
       })
-      .catch((response) => {
-        setPopulationLoading(false);
+      .catch(() => {
         setPopulation(null);
+        setPopulationLoading(false);
       });
-  }, []);
+  }, [country.name]);
 
   useEffect(() => {
     axios
@@ -44,13 +47,27 @@ const CountryComponent = ({
       .then(({ data }) => {
         const { lat, long } = data.data;
         setLngLat([long, lat]);
+        setPositionLoading(false);
       })
-      .catch(() => setLngLat([0, 0]));
-  }, []);
+      .catch(() => {
+        setLngLat(null);
+        setPositionLoading(false);
+      });
+  }, [country.name]);
 
   return (
     <div
-      onClick={() => handleCountryClick({ LngLat })}
+      onClick={() => {
+        if (!positionLoading && LngLat) {
+          handleCountryClick({ LngLat });
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description: "Position data is not loaded yet!",
+          });
+        }
+      }}
       className="py-4 px-2 rounded-lg bg-[#353340] flex gap-4 hover:cursor-pointer hover:bg-[#3C3E4A] border-2 border-transparent hover:border-white hover:border-opacity-10"
     >
       {country.flag ? (
@@ -65,7 +82,6 @@ const CountryComponent = ({
       ) : (
         <div className="w-[100px]"></div>
       )}
-      {/* Country info */}
       <div className="space-y-2">
         <Title>{country.name}</Title>
         <CountryStatistics
