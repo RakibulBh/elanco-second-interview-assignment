@@ -6,11 +6,11 @@ const SearchBar = ({
   setSearchTerm: (value: string) => void;
 }) => {
   return (
-    <div className="flex w-96 items-center gap-2 text-gray px-3 py-4 rounded-lg bg-[#35333E]">
+    <div className="flex w-[30rem] items-center gap-2 text-gray px-3 py-4 rounded-lg bg-[#35333E]">
       <Search />
       <input
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="bg-transparent focus:outline-none"
+        className="w-full bg-transparent focus:outline-none"
         placeholder="Search"
       />
     </div>
