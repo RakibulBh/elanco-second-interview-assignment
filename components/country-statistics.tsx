@@ -1,19 +1,29 @@
+import { Population } from "@/types";
 import { HandCoins, MapPin, UsersRound } from "lucide-react";
 
-const CountryStatistics = () => {
+const CountryStatistics = ({
+  capital,
+  currency,
+  population,
+}: {
+  capital: string;
+  currency: string;
+  population: Population[] | null;
+}) => {
   return (
-    <div className="flex items-center gap-6 text-sm">
+    <div className="flex items-center gap-1 md:gap-6 text-xs sm:text-sm">
       <div className="flex items-center gap-2 text-gray">
         <UsersRound />
-        <p>60M</p>
+
+        <p>{population ? population[population.length - 1].value : "N/A"}</p>
       </div>
       <div className="flex items-center gap-2 text-gray">
         <MapPin />
-        <p>Rome</p>
+        <p>{capital}</p>
       </div>
       <div className="flex items-center gap-2 text-gray">
         <HandCoins />
-        <p>Euro</p>
+        <p>{currency}</p>
       </div>
     </div>
   );
