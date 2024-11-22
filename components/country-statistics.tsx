@@ -1,5 +1,6 @@
 import { Population } from "@/types";
 import { HandCoins, MapPin, UsersRound } from "lucide-react";
+import abbreviate from "number-abbreviate";
 
 const CountryStatistics = ({
   capital,
@@ -10,12 +11,14 @@ const CountryStatistics = ({
   currency: string;
   population: Population[] | null;
 }) => {
+  const roundedNumber = population
+    ? abbreviate(population[population.length - 1].value)
+    : 0;
   return (
     <div className="flex items-center gap-1 md:gap-6 text-xs sm:text-sm">
       <div className="flex items-center gap-2 text-gray">
         <UsersRound />
-
-        <p>{population ? population[population.length - 1].value : "N/A"}</p>
+        <p>{population ? roundedNumber : "N/A"}</p>
       </div>
       <div className="flex items-center gap-2 text-gray">
         <MapPin />
