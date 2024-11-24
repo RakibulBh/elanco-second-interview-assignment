@@ -8,8 +8,6 @@ import Image from "next/image";
 import { toast } from "@/hooks/use-toast";
 import { Country, Population } from "@/types";
 
-const populationURL =
-  "https://countriesnow.space/api/v0.1/countries/population";
 const positionURL = "https://countriesnow.space/api/v0.1/countries/positions";
 
 const CountryComponent = ({
@@ -19,25 +17,8 @@ const CountryComponent = ({
   country: Country;
   handleCountryClick: ({ LngLat }: { LngLat: [number, number] }) => void;
 }) => {
-  const [population, setPopulation] = useState<Population[] | null>(null);
-  const [populationLoading, setPopulationLoading] = useState<boolean>(true);
   const [positionLoading, setPositionLoading] = useState<boolean>(true);
   const [LngLat, setLngLat] = useState<[number, number] | null>(null);
-
-  useEffect(() => {
-    axios
-      .post(populationURL, {
-        country: country.name.toLowerCase(),
-      })
-      .then((response) => {
-        setPopulation(response.data.data.populationCounts || []);
-        setPopulationLoading(false);
-      })
-      .catch(() => {
-        setPopulation(null);
-        setPopulationLoading(false);
-      });
-  }, [country.name]);
 
   useEffect(() => {
     axios
@@ -87,8 +68,7 @@ const CountryComponent = ({
         <CountryStatistics
           capital={country.capital}
           currency={country.currency}
-          populationLoading={populationLoading}
-          population={population}
+          population={country.population}
         />
       </div>
     </div>
