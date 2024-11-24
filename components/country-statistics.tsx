@@ -6,27 +6,17 @@ const CountryStatistics = ({
   capital,
   currency,
   population,
-  populationLoading,
 }: {
   capital: string;
   currency: string;
-  population: Population[] | null;
-  populationLoading: boolean;
+  population: number;
 }) => {
-  const roundedNumber = population
-    ? abbreviate(population[population.length - 1].value)
-    : 0;
+  const roundedNumber = population ? abbreviate(population) : "N/A";
   return (
     <div className="flex items-center gap-1 md:gap-6 text-xs sm:text-sm">
       <div className="flex items-center gap-2 text-gray">
         <UsersRound />
-        <p>
-          {populationLoading
-            ? "Loading..."
-            : population
-            ? roundedNumber
-            : "N/A"}
-        </p>
+        <p>{roundedNumber}</p>
       </div>
       <div className="flex items-center gap-2 text-gray">
         <MapPin />
